@@ -1,30 +1,31 @@
-FROM node:lts AS dist
-COPY package.json ./
+# Install dependencies only when needed
+FROM node:14-alpine AS deps
 
-RUN yarn install
+WORKDIR /app
+COPY package.json yarn.lock ./
+RUN yarn install --frozen-lockfile
 
-COPY . ./
+# Rebuild the source code only when needed
+FROM node:14-alpine AS builder
+WORKDIR /app
+COPY . .
+COPY --from=deps /app/node_modules ./node_modules
+RUN yarn build:prod && yarn install --network-timeout 100000  --production --ignore-scripts --prefer-offline
 
-RUN yarn build:prod
+# Production image, copy all the files and run next
+FROM node:14-alpine AS runner
+WORKDIR /app
 
-FROM node:lts AS node_modules
-COPY package.json ./
+ENV NODE_ENV production
 
-RUN yarn install --prod
+RUN addgroup -g 1001 -S nodejs
+RUN adduser -S nestjs -u 1001
 
-FROM node:lts
+COPY --from=builder /app/dist ./dist
+COPY --from=builder /app/node_modules ./node_modules
+COPY --from=builder /app/package.json ./package.json
+COPY --from=builder /app/.env/ ./.env
 
-ARG PORT=3000
+USER nestjs
 
-RUN mkdir -p /usr/src/app
-
-WORKDIR /usr/src/app
-
-COPY --from=dist dist /usr/src/app/dist
-COPY --from=node_modules node_modules /usr/src/app/node_modules
-
-COPY . /usr/src/app
-
-EXPOSE $PORT
-
-CMD [ "yarn", "start:prod" ]
+CMD [ "npm", "run", "start:prod" ]

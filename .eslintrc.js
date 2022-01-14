@@ -39,7 +39,7 @@ module.exports = {
     'import/newline-after-import': 'error',
     'import/no-absolute-path': 'error',
     'import/no-duplicates': 'error',
-    'prettier/prettier': ['error', { singleQuote: true, trailingComma: 'all', tabWidth: 2 }],
+    'prettier/prettier': ['error', { singleQuote: true, trailingComma: 'all', tabWidth: 2, printWidth: 120 }],
     '@typescript-eslint/camelcase': 'off',
     '@typescript-eslint/no-unused-vars': [
       'error',
