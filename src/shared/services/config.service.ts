@@ -18,7 +18,7 @@ export class ApiConfigService {
     return this.nodeEnv === 'test';
   }
 
-  private getNumber(key: string): number {
+  public getNumber(key: string): number {
     const value = this.get(key);
 
     try {
@@ -28,7 +28,7 @@ export class ApiConfigService {
     }
   }
 
-  private getBoolean(key: string): boolean {
+  public getBoolean(key: string): boolean {
     const value = this.get(key);
 
     try {
@@ -38,11 +38,13 @@ export class ApiConfigService {
     }
   }
 
-  private getString(key: string, required?: boolean): string {
+  public getString(key: string, required?: boolean): string {
     const value = this.get(key);
+
     if (required && !value) {
       throw new Error(key + ' environment variable does not set'); // probably we should call process.exit() too to avoid locking the service
     }
+
     return value.replace(/\\n/g, '\n');
   }
 
@@ -95,5 +97,29 @@ export class ApiConfigService {
 
   get ipAddressUrl() {
     return this.getString('IP_INFO_URL', true);
+  }
+
+  getServiceName(): string {
+    return this.getString('SERVICE_NAME');
+  }
+
+  getBaseUrl(): string {
+    return this.getString('BASE_URL');
+  }
+
+  getSwaggerUserName(): string {
+    return this.getString('SWAGGER_USER_NAME');
+  }
+
+  getSwaggerPassword(): string {
+    return this.getString('SWAGGER_PASSWORD');
+  }
+
+  getMorganConfig(): string {
+    return ':remote-addr - [:date[clf]] ":method :url HTTP/:http-version" :status ":referrer" ":user-agent" :res[content-length] :response-time ms';
+  }
+
+  getServerPort(): number {
+    return this.getNumber('SERVER_PORT') || 5000;
   }
 }

@@ -1,5 +1,8 @@
 version: "3"
 
+volumes:
+  db: # mount it internally instead of a folder. it avoids file lock problems
+
 services:
   node:
     env_file:
@@ -9,5 +12,3 @@ services:
     build: .
     ports:
       - "5000:5000"
-volumes:
-  scheduler-worker:
