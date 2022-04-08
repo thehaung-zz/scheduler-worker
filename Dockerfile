@@ -2,7 +2,7 @@
 FROM node:14-alpine AS builder
 
 WORKDIR /app
-COPY ${PWD}/package*.json ./
+COPY ${PWD}/package*.json yarn.lock ./
 RUN yarn install --production --network-timeout 1000000
 COPY . .
 RUN npm run build:prod
