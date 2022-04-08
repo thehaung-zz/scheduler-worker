@@ -3,7 +3,7 @@ FROM node:14-alpine AS builder
 
 WORKDIR /app
 COPY ${PWD}/package*.json ./
-RUN npm install --only=production --network-timeout 1000000
+RUN npm install --only=production
 COPY . .
 RUN npm run build:prod
 
