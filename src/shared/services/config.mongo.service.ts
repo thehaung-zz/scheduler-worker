@@ -75,7 +75,7 @@ export class ConfigMongoService {
     const { username, password, host, database } = this.getMongoConfig();
     const uri = `mongodb+srv://${
       // eslint-disable-next-line sonarjs/no-nested-template-literals
-      isNil(username) && isNil(password) ? `${username}:${encodeURIComponent(password)}@` : ''
+      !isNil(username) && !isNil(password) ? `${username}:${encodeURIComponent(password)}@` : ''
     }${host}/${database}?authSource=admin`;
     this.logger.warn(`Mongoose is connect to uri: ${uri}`);
 
