@@ -9,7 +9,7 @@
     "prebuild": "rimraf dist",
     "build:no-watch-check-nestjs-command": "cross-env NODE_ENV=development nest build",
     "build:test": "cross-env NODE_ENV=test nest build",
-    "build:prod": "NODE_ENV=production nest build",
+    "build:prod": "NODE_ENV=production tsc -p tsconfig.build.json",
     "build:dev": "cross-env NODE_ENV=development nest build",
     "build:staging": "cross-env NODE_ENV=staging nest build",
     "start": "cross-env NODE_ENV=development node dist/main",
