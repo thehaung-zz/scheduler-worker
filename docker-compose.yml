@@ -1,11 +1,11 @@
 version: '3.0'
 services:
-  testing:
+  node:
     build:
       context: .
       dockerfile: Dockerfile
     image: schedule-worker
-    container_name: schedule-worker-node
+    container_name: schedule-worker
     restart: unless-stopped
     ports:
       - '5000:5000'
