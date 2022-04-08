@@ -1,11 +1,12 @@
-import { ConfigService } from '@nestjs/config';
-import { isNil } from 'lodash';
-import { MongooseModuleOptions } from '@nestjs/mongoose';
 import { Injectable, Logger } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
+import type { MongooseModuleOptions } from '@nestjs/mongoose';
+import { isNil } from 'lodash';
 
 @Injectable()
 export class ConfigMongoService {
   private readonly logger: Logger = new Logger(ConfigMongoService.name);
+
   constructor(private readonly configService: ConfigService) {}
 
   get isDevelopment(): boolean {
@@ -71,11 +72,13 @@ export class ConfigMongoService {
   }
 
   createMongooseOptions(): MongooseModuleOptions {
-    const { username, password, host, port, database } = this.getMongoConfig();
+    const { username, password, host, database } = this.getMongoConfig();
     const uri = `mongodb+srv://${
-      !!username && !!password ? `${username}:${encodeURIComponent(password)}@` : ``
+      // eslint-disable-next-line sonarjs/no-nested-template-literals
+      isNil(username) && isNil(password) ? `${username}:${encodeURIComponent(password)}@` : ''
     }${host}/${database}?authSource=admin`;
     this.logger.warn(`Mongoose is connect to uri: ${uri}`);
+
     return {
       uri,
       useNewUrlParser: true,
