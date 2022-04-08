@@ -1,14 +1,13 @@
-version: "3"
-
-volumes:
-  db: # mount it internally instead of a folder. it avoids file lock problems
-
+version: '3.0'
 services:
-  node:
-    env_file:
-      - .env
-    container_name: scheduler-worker
-    restart: always
-    build: .
+  testing:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: schedule-worker
+    container_name: schedule-worker-node
+    restart: unless-stopped
     ports:
-      - "5000:5000"
+      - '5000:5000'
+    expose:
+      - '5000'
