@@ -52,7 +52,7 @@ export class WorkerService {
         return Promise.reject(new InternalServerErrorException());
       }
 
-      this.logger.log(`Job tracking IP is done. IP Address: ${ipAddress}`);
+      this.logger.verbose(`Job tracking IP is done. IP Address: ${ipAddress}`);
 
       const previous = await this.getPreviousIP();
 
@@ -73,9 +73,9 @@ export class WorkerService {
   }
 
   async getPreviousIP(): Promise<string> {
-    const ip = await this.infoModel.findOne({}).sort({ createdAt: -1 }).exec();
+    const ip = await this.infoModel.find({}).sort({ createdAt: -1 }).limit(1).exec();
 
-    return ip.ipInfo;
+    return ip[0].ipInfo;
   }
 
   async getListDNSCloudFlare(): Promise<unknown> {
